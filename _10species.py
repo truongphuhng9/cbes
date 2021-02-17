@@ -20,7 +20,6 @@ def main():
 
     # read file csv format
     with open(sys.argv[1], mode='r') as csv_file:
-        print('read file okay')
         data = csv.reader(csv_file, delimiter=',')
         
         group = []
@@ -33,9 +32,17 @@ def main():
                 index += 1
 
             # row[0] is a column of species
-            specie = [row[0], index]
-            if specie not in group and len(group) != 10:
-                group.append(specie)
+            new_one = row.copy()
+            new_one.append(index)
+            print(new_one)
+            is_already = False
+            for specie in group:
+                if specie != None and row[0] == specie[0]:
+                    specie[1] = int(specie[1]) + int(row[1])
+                    is_already = True
+            
+            if not is_already:
+                group.append(new_one)
 
         # Case of last group 
         species_list.extend(group.copy())
