@@ -20,44 +20,33 @@ def main():
 
     # read file csv format
     with open(sys.argv[1], mode='r') as csv_file:
-        data = csv.reader(csv_file, delimiter=',')
+        data = csv.DictReader(csv_file)
         
+        process = []
         group = []
         index = 1
 
-        for row in data:
+        for specie in data:
+            # Checking if the group already has 10 species
             if len(group) == 10:
-                species_list.extend(group.copy())
                 group.clear()
                 index += 1
 
-            # row[0] is a column of species
-            new_one = row.copy()
-            new_one.append(index)
-            print(new_one)
-            is_already = False
-            for specie in group:
-                if specie != None and row[0] == specie[0]:
-                    specie[1] = int(specie[1]) + int(row[1])
-                    is_already = True
-            
-            if not is_already:
-                group.append(new_one)
+            # Add the group to Specie
+            specie['Group'] = index
 
-        # Case of last group 
-        species_list.extend(group.copy())
-        group.clear()
-        index += 1
+            # Add specie to the group if it doesnot exist
+            if specie['Specie'] not in group:
+                group.append(specie['Specie'])
 
-    print(species_list)
-                
+            # Add this to new block
+            process.append(specie)
 
-    with open('tenSpecies.csv', mode='w') as ofile:
-        writer = csv.writer(ofile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
-        for species in species_list:
-            writer.writerow(species)
-
+        with open('tenSpecies.csv', mode='w') as ofile:
+            fields = ['Specie', 'Individual', 'Group']
+            writer = csv.DictWriter(ofile, fieldnames=fields)
+            writer.writeheader()
+            writer.writerows(process)
 
 if __name__ == "__main__":
     main()
-
