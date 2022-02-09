@@ -51,7 +51,7 @@ def main():
         
         result = tenSpecies(data)        
 
-        with open('tenSpecies.csv', mode='w') as ofile:
+        with open('tenSpecies.csv', mode='w', newline='') as ofile:
             fields = ['Specie', 'Individual', 'Group']
             writer = csv.DictWriter(ofile, fieldnames=fields)
             writer.writeheader()
